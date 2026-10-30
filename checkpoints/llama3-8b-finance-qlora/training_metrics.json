@@ -1,0 +1,48 @@
+{
+  "train_loss": 0.684,
+  "epoch": 2.0,
+  "total_steps": 1000,
+  "trainable_params": 41943040,
+  "total_params": 8072204288,
+  "trainable_percentage": 0.5196,
+  "learning_rate": 0.0002,
+  "optimizer": "paged_adamw_8bit",
+  "quantization": "4-bit NF4 double quantization",
+  "per_device_train_batch_size": 4,
+  "gradient_accumulation_steps": 4,
+  "effective_batch_size": 16,
+  "target_modules": [
+    "q_proj",
+    "k_proj",
+    "v_proj",
+    "o_proj",
+    "gate_proj",
+    "up_proj",
+    "down_proj"
+  ],
+  "lora_rank": 16,
+  "lora_alpha": 32,
+  "dataset_samples": 8000,
+  "loss_history": [
+    {
+      "step": 100,
+      "loss": 1.452
+    },
+    {
+      "step": 250,
+      "loss": 1.12
+    },
+    {
+      "step": 500,
+      "loss": 0.894
+    },
+    {
+      "step": 750,
+      "loss": 0.742
+    },
+    {
+      "step": 1000,
+      "loss": 0.684
+    }
+  ]
+}

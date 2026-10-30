@@ -1,0 +1,7 @@
+{
+  "sft_train_total": 8000,
+  "sft_10k_count": 5000,
+  "sft_alpaca_count": 3000,
+  "rag_corpus_count": 1000,
+  "eval_count": 100
+}
