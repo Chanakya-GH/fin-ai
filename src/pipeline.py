@@ -132,24 +132,23 @@ class FinancialAdvisoryPipeline:
         ticker = best_chunk.get("ticker", "SEC")
         doc_id = best_chunk.get("doc_id", "N/A")
         
-        # Pick sentences matching query terms
-        query_words = set(re.findall(r'\b\w{3,}\b', query.lower()))
-        sentences = [s.strip() for s in context_text.split('.') if len(s.strip()) > 15]
+        # Pick sentences matching query terms without breaking on abbreviations like Inc.
+        if len(context_text) <= 350:
+            relevant_text = context_text
+        else:
+            sentences = [s.strip() for s in re.split(r'(?<!\bInc)(?<!\bCorp)(?<!\bLtd)(?<!\bCo)(?<!\bvs)\.\s+', context_text) if len(s.strip()) > 15]
+            query_words = set(re.findall(r'\b\w{3,}\b', query.lower()))
+            scored_sentences = []
+            for s in sentences:
+                s_words = set(re.findall(r'\b\w{3,}\b', s.lower()))
+                overlap = len(query_words.intersection(s_words))
+                scored_sentences.append((overlap, s))
+            scored_sentences.sort(key=lambda x: x[0], reverse=True)
+            relevant_text = scored_sentences[0][1] if scored_sentences else context_text[:350]
         
-        scored_sentences = []
-        for s in sentences:
-            s_words = set(re.findall(r'\b\w{3,}\b', s.lower()))
-            overlap = len(query_words.intersection(s_words))
-            scored_sentences.append((overlap, s))
-        
-        scored_sentences.sort(key=lambda x: x[0], reverse=True)
-        relevant_text = scored_sentences[0][1] if scored_sentences else sentences[0] if sentences else context_text[:200]
-        
-        # Extract figures
-        numbers = re.findall(r'\$[\d,.]+\s*(?:billion|million|trillion)?|\d+\.?\d*%', context_text)
-        figures_clause = f" Key figures include: {', '.join(numbers[:3])}." if numbers else ""
-        
-        response = f"According to the SEC filing [Source {doc_id} | {ticker}], {relevant_text}.{figures_clause}"
+        # Clean trailing period if any
+        relevant_text = relevant_text.rstrip(".")
+        response = f"According to the SEC filing [Source {doc_id} | {ticker}], {relevant_text}."
         return response
 
     def run(self, user_query: str) -> dict:

@@ -130,6 +130,7 @@ class FinancialSafetyGuardrails:
             "very", "just", "about", "also", "more", "most", "some",
             "such", "only", "other", "into", "over", "after", "before",
             "between", "under", "above", "below", "each", "every",
+            "according", "based", "filing", "source", "sec", "key", "figures", "include", "stated",
         }
         resp_tokens = [
             w for w in re.findall(r"\b[a-zA-Z]{4,}\b", response.lower())
