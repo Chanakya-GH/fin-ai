@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  advisory-agent:
+    build: .
+    container_name: financial-advisory-agent
+    ports:
+      - "8000:8000"
+    environment:
+      - DEMO_MODE=true
+    volumes:
+      - ./chroma_db:/app/chroma_db
+      - ./checkpoints:/app/checkpoints
+    restart: unless-stopped
